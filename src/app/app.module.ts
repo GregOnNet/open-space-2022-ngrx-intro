@@ -1,18 +1,32 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
+import { openSpaceFeatureKey } from './store';
+import { OpenSpaceEffects } from './store/open-space.effects';
+import { openSpaceReducer } from './store/open-space.reducer';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  bootstrap: [AppComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    StoreModule.forRoot({ [openSpaceFeatureKey]: openSpaceReducer }, {
+      runtimeChecks: {
+        strictActionTypeUniqueness: true,
+        strictActionWithinNgZone: true,
+        strictActionImmutability: true,
+        strictStateImmutability: true,
+        strictActionSerializability: true,
+        strictStateSerializability: true
+      }
+    }),
+    EffectsModule.forRoot([OpenSpaceEffects]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
   ],
-  providers: [],
-  bootstrap: [AppComponent]
 })
 export class AppModule { }
